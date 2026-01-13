@@ -1,3 +1,4 @@
+// create geoJSON feature from QGIS data with all of the appropriate data for all the bishops
 const geojsonFeature = {
 "type": "FeatureCollection",
 "name": "nicaean_bishops1-13",
@@ -205,8 +206,11 @@ const geojsonFeature = {
 ]
 }
 
+// create map
 const map = L.map('map', {
+  // give it inertia so it feels good
   inertia: true
+// set view and zoom to correct area so (most of) the points are in frame when the map loads
 }).setView([37, 28], 6);
 
 const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
