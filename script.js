@@ -256,7 +256,7 @@ const constantinople = L.marker([41.00659263,28.96532146], {
   // give the point the star icon
   icon: starIcon,
   // bring star to the top
-  zIndexOffset: 1
+  zIndexOffset: 1000
 // give the point a popup and add it to the map
 }).bindPopup("Constantinople").addTo(map);
 
