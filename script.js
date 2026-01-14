@@ -251,6 +251,13 @@ const starIcon = L.icon({
   iconAnchor: [12, 11.5]
 })
 
+// create marker for Constantinople
+const constantinople = L.marker([41.00659263,28.96532146], {
+  // give the point the star icon
+  icon: starIcon
+// give the point a popup and add it to the map
+}).bindPopup("Constantinople").addTo(map);
+
 // create empty array for names of eparchies to be placed in 
 var eparchyList = [];
 // create iterator to run through each bishop in the jeoGSON feature from the QGIS data
@@ -298,11 +305,27 @@ for (var i = 0; i < eparchyList.length; i++) {
       }
     // add a popup to each feature  
     }).bindPopup(function (layer) {
-      /*  make the text in the popup include the bishop name, city, and eparchy: 
-          BISHOP of CITY
-          Eparchy of EPARCHY
-      */  
-      return layer.feature.properties.name+" of "+layer.feature.properties.city+"<br />Eparchy of "+layer.feature.properties.eparchy;
+      // if the bishop is rural
+      if (layer.feature.properties.rural === 1.0) {
+        /* make the text in the popup include the bishop name and eparchy: 
+            BISHOP
+            Eparchy of EPARCHY
+        */
+        return layer.feature.properties.name+"<br />Eparchy of "+layer.feature.properties.eparchy;
+      // if the bishop is not in an eparchy
+      } else if (layer.feature.properties.eparchy === "None") {
+        /* make the text in the popup include the bishop name and city: 
+            BISHOP of CITY
+        */
+        return layer.feature.properties.name+" of "+layer.feature.properties.city;
+      // otherwise (if the bishop is not rural and is in an eparchy)
+      } else {
+        /* make the text in the popup include the bishop name, city, and eparchy: 
+            BISHOP of CITY
+            Eparchy of EPARCHY
+        */  
+        return layer.feature.properties.name+" of "+layer.feature.properties.city+"<br />Eparchy of "+layer.feature.properties.eparchy;
+      }
     // add popups to the map  
     }).addTo(map);
     // put the layer object in the eparchyLayers object with a key corresponding to the correct eparchy
