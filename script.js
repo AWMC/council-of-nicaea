@@ -209,9 +209,14 @@ const geojsonFeature = {
 // create map
 const map = L.map('map', {
   // give it inertia so it feels good
-  inertia: true
+  inertia: true,
+  // disable default zoom control so that we can change where it is
+  zoomControl: false
 // set view and zoom to correct area so (most of) the points are in frame when the map loads
 }).setView([37, 28], 6);
+
+// place zoom control in the bottom right corner of the screen
+var zoomcontrol = L.control.zoom({position: "bottomright"}).addTo(map);
 
 // create Open Street Map Layer from url
 const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -256,7 +261,9 @@ const constantinople = L.marker([41.00659263,28.96532146], {
   // give the point the star icon
   icon: starIcon,
   // bring star to the top
-  zIndexOffset: 1000
+  zIndexOffset: 1000,
+  // give title for compatibility with search bar
+  title: "Constantinople"
 // give the point a popup and add it to the map
 }).bindPopup("Constantinople").addTo(map);
 
@@ -295,14 +302,18 @@ for (var i = 0; i < eparchyList.length; i++) {
         // return a marker object at the bishop's coordinates     
         return L.marker(latlng, {
           // give it the rural icon
-          icon: ruralIcon 
+          icon: ruralIcon,
+          // give title for compatibility with search bar
+          title: feature.properties.name
         })
       // otherwise (if the feature is not a rural bishop)  
       } else {
         // return a marker object at the bishop's coordinates    
         return L.marker(latlng, {
           // give it the located icon    
-          icon: locatedIcon          
+          icon: locatedIcon,
+          // give title for compatibility with search bar
+          title: feature.properties.name+" of "+feature.properties.city          
         })};
       }
     // add a popup to each feature  
@@ -344,3 +355,21 @@ var baseLayers = {
 
 // create layer control menu to select eparchies to show on the map
 var layercontrol = L.control.layers(baseLayers, eparchyLayers).addTo(map);
+
+// create searchbar with pinSearch plugin
+var searchBar = L.control.pinSearch({
+  // set searchbar in the top left, set filler text
+  position: 'topleft',
+  placeholder: 'Search...',
+  buttonText: 'Search',
+  // which function to run when a search happens
+  onSearch: function(query) {
+    // zoom in
+    map.setZoom(12);
+  },
+  // set searchbar size and max search results
+  searchBarWidth: '200px',
+  searchBarHeight: '30px',
+  maxSearchResults: 10
+// add to the map
+}).addTo(map);
