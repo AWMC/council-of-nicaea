@@ -1,3 +1,18 @@
+/*
+let geojsonFeature;
+
+fetch('nicaean_bishops1-13.geojson')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok: ' + response.statusText);
+    }
+    return response.json();
+  })
+  .then(data => {
+    geojsonFeature = data
+  })
+*/
+
 // create geoJSON feature from QGIS data with all of the appropriate data for all the bishops
 const geojsonFeature = {
 "type": "FeatureCollection",
