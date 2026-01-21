@@ -1,5 +1,5 @@
 // get data from geoJSON file
-fetch('nicaean_bishops1-13.geojson')
+fetch('nicaean_bishops.geojson')
   .then(response => {
     //check for errors and return data
     if (!response.ok) {
