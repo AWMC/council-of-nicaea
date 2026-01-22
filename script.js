@@ -75,9 +75,9 @@ const constantinople = L.marker([41.00659263,28.96532146], {
 }).bindPopup("Constantinople").addTo(map);
 
 // create empty array for names of eparchies to be placed in 
-var eparchyList = [];
+let eparchyList = [];
 // create iterator to run through each bishop in the jeoGSON feature from the QGIS data
-for (var i = 0; i < geojsonFeature.features.length; i++) {
+for (let i = 0; i < geojsonFeature.features.length; i++) {
   // grab the eparchy from the ith bishop in the data
   let current_eparchy = geojsonFeature.features[i].properties.eparchy;
   // if that eparchy is not in the array for the names of eparchies,
@@ -87,10 +87,10 @@ for (var i = 0; i < geojsonFeature.features.length; i++) {
   }
 };
 
-// create empty object for layer objects that will eventually hold all datapoints within one eparchy
-var eparchyLayers = {};
+// create empty array for layer objects that will eventually hold all datapoints within one eparchy
+let eparchyLayers = [];
 // create an iterator to run through each eparchy in the list of eparchy names
-for (var i = 0; i < eparchyList.length; i++) {
+for (let i = 0; i < eparchyList.length; i++) {
   // create layer object from geoJSON data
   var eparchyBishops = L.geoJSON(geojsonFeature, {
     // filter data using a function
@@ -148,20 +148,45 @@ for (var i = 0; i < eparchyList.length; i++) {
       }
     // add popups to the map  
     }).addTo(map);
-    // put the layer object in the eparchyLayers object with a key corresponding to the correct eparchy
-    eparchyLayers[eparchyList[i]] = eparchyBishops;
+    // format layer into object for compatability with tree plugin
+    let treeLayer = {
+      label: eparchyList[i],
+      layer: eparchyBishops
+    }
+    // add object to layers array
+    eparchyLayers.push(treeLayer);
 }
 
-// create interactive menu to switch between base layers
-var baseLayers = {
-  // add OSM layer
-  "OpenStreetMap": osm,
-  // add CAWM layer
-  "Ancient World": overlay
+/* removed because of personal preference; no reason to ever disable layers
+let baseTree = {
+  label: "Base Layers",
+  children: [
+    {label: "OpenStreetMap", layer: osm},
+    {label: "Ancient World", layer: overlay}
+  ]
 };
+*/
 
-// create layer control menu to select eparchies to show on the map
-var layercontrol = L.control.layers(baseLayers, eparchyLayers).addTo(map);
+// create overlays object
+let overlaysTree = [
+  {
+    // Constantinople
+    label:"Constantinople",
+    layer: constantinople,
+    /*  added empty children array to change the way the plugin renders Constantinople selection. 
+        otherwise, it looks like eparchies live under Constantinople */
+    children: []
+  }, {
+    // all of the eparchies
+    label: "Bishops (by eparchy)",
+    // unselect all button (main goal of the plugin)
+    selectAllCheckbox: true,
+    // array of eparchy layer objects we created earlier
+    children: eparchyLayers
+  }
+];
+
+L.control.layers.tree(null, overlaysTree).addTo(map);
 
 // create searchbar with pinSearch plugin
 var searchBar = L.control.pinSearch({
