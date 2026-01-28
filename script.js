@@ -91,6 +91,13 @@ for (let i = 0; i < geojsonFeature.features.length; i++) {
 let eparchyLayers = [];
 // create an iterator to run through each eparchy in the list of eparchy names
 for (let i = 0; i < eparchyList.length; i++) {
+  // create cluster group from markercluster plugin to help deal with collision detection
+  const eparchyCluster = L.markerClusterGroup({
+    // disable polygon
+    showCoverageOnHover: false,
+    // decrease cluster radius so more points show up on load
+    maxClusterRadius: 20
+  });
   // create layer object from geoJSON data
   var eparchyBishops = L.geoJSON(geojsonFeature, {
     // filter data using a function
@@ -122,37 +129,44 @@ for (let i = 0; i < eparchyList.length; i++) {
           // give title for compatibility with search bar
           title: feature.properties.name+" of "+feature.properties.city          
         })};
-      }
-    // add a popup to each feature  
-    }).bindPopup(function (layer) {
+    },
+    // use onEachFeature to give markers popups
+    onEachFeature: function (feature, layer) {
+      // create variable for popup text to be stored
+      let popupText;
       // if the bishop is rural
       if (layer.feature.properties.rural === 1.0) {
         /* make the text in the popup include the bishop name and eparchy: 
             BISHOP
             Eparchy of EPARCHY
         */
-        return layer.feature.properties.name+"<br />Eparchy of "+layer.feature.properties.eparchy;
+        popupText = layer.feature.properties.name+"<br />Eparchy of "+layer.feature.properties.eparchy;
       // if the bishop is not in an eparchy
       } else if (layer.feature.properties.eparchy === "None") {
         /* make the text in the popup include the bishop name and city: 
             BISHOP of CITY
         */
-        return layer.feature.properties.name+" of "+layer.feature.properties.city;
+        popupText = layer.feature.properties.name+" of "+layer.feature.properties.city;
       // otherwise (if the bishop is not rural and is in an eparchy)
       } else {
         /* make the text in the popup include the bishop name, city, and eparchy: 
             BISHOP of CITY
             Eparchy of EPARCHY
         */  
-        return layer.feature.properties.name+" of "+layer.feature.properties.city+"<br />Eparchy of "+layer.feature.properties.eparchy;
+        popupText = layer.feature.properties.name+" of "+layer.feature.properties.city+"<br />Eparchy of "+layer.feature.properties.eparchy;
       }
-    // add popups to the map  
-    }).addTo(map);
+      // apply popup to marker
+      layer.bindPopup(popupText);
+    }});
+    //add the layer to clustering layer
+    eparchyCluster.addLayer(eparchyBishops);
     // format layer into object for compatability with tree plugin
     let treeLayer = {
       label: eparchyList[i],
-      layer: eparchyBishops
+      layer: eparchyCluster
     }
+    // add cluster layer to map
+    map.addLayer(eparchyCluster);
     // add object to layers array
     eparchyLayers.push(treeLayer);
 }
@@ -186,6 +200,7 @@ let overlaysTree = [
   }
 ];
 
+// add overlays to control. baselayers left null for personal preference since toggling is not needed
 L.control.layers.tree(null, overlaysTree).addTo(map);
 
 // create searchbar with pinSearch plugin
