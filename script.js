@@ -18,7 +18,9 @@ const map = L.map('map', {
   // give it inertia so it feels good
   inertia: true,
   // disable default zoom control so that we can change where it is
-  zoomControl: false
+  zoomControl: false,
+  // set max zoom because of CAWM limitations
+  maxZoom: 11
 // set view and zoom to correct area so (most of) the points are in frame when the map loads
 }).setView([37, 28], 5);
 
@@ -55,7 +57,7 @@ const ruralIcon = L.icon({
   iconAnchor: [9,9]
 });
 
-// create icon for Constantinople
+// create icon for Nicaea
 const starIcon = L.icon({
   // pull icon source
   iconUrl: 'starIcon.png',
@@ -63,16 +65,16 @@ const starIcon = L.icon({
   iconAnchor: [12, 11.5]
 })
 
-// create marker for Constantinople
-const constantinople = L.marker([41.00659263,28.96532146], {
+// create marker for Nicaea
+const nicaea = L.marker([40.428361244824998, 29.716146510449995], {
   // give the point the star icon
   icon: starIcon,
   // bring star to the top
   zIndexOffset: 1000,
   // give title for compatibility with search bar
-  title: "Constantinople"
+  title: "Theognis of Nicaea"
 // give the point a popup and add it to the map
-}).bindPopup("Constantinople").addTo(map);
+}).bindPopup("Theognis of Nicaea<br />Eparchy of Bithynia").addTo(map);
 
 // create empty array for names of eparchies to be placed in 
 let eparchyList = [];
@@ -102,6 +104,8 @@ for (let i = 0; i < eparchyList.length; i++) {
   var eparchyBishops = L.geoJSON(geojsonFeature, {
     // filter data using a function
     filter: function (feature, layer) {
+      // filter out Nicaea point, so it doesnt overlay with the star
+      if (feature.properties.city === "Nicaea") return false;
       /*  make the functionreturn t/f depending on if the bishop's eparchy matches the ith eparchy. 
           this makes it so only bishops in the ith eparchy are included in the layer being created
       */  
@@ -111,7 +115,7 @@ for (let i = 0; i < eparchyList.length; i++) {
         it wants a function that returns a marker object
     */      
     pointToLayer: function(feature, latlng) {
-      // if the feature is a rural bishop   
+      // if the feature is a rural bishop & not the bishop in Nicaea. We are excluding this one for special treatment.  
       if (feature.properties.rural === 1.0) {
         // return a marker object at the bishop's coordinates     
         return L.marker(latlng, {
@@ -120,7 +124,7 @@ for (let i = 0; i < eparchyList.length; i++) {
           // give title for compatibility with search bar
           title: feature.properties.name
         })
-      // otherwise (if the feature is not a rural bishop)  
+      // otherwise (if the feature is not a rural bishop)
       } else {
         // return a marker object at the bishop's coordinates    
         return L.marker(latlng, {
@@ -185,10 +189,10 @@ let baseTree = {
 let overlaysTree = [
   {
     // Constantinople
-    label:"Constantinople",
-    layer: constantinople,
-    /*  added empty children array to change the way the plugin renders Constantinople selection. 
-        otherwise, it looks like eparchies live under Constantinople */
+    label:"Nicaea",
+    layer: nicaea,
+    /*  added empty children array to change the way the plugin renders Nicaea selection. 
+        otherwise, it looks like eparchies live under Nicaea */
     children: []
   }, {
     // all of the eparchies
@@ -211,15 +215,37 @@ var searchBar = L.control.pinSearch({
   buttonText: 'Search',
   // which function to run when a search happens
   onSearch: function(query) {
-    // zoom in
-    map.setZoom(12);
-  },
+    // if Nicaea was searched for
+    if (nicaea.options.title === query) {
+      // pan to Nicaea
+      map.setView(nicaea.getLatLng());
+      // open the popup
+      nicaea.openPopup();
+    }
+    // go through each cluster group
+    eparchyLayers.forEach(obj => {
+      const clusterGroup = obj.layer;      
+      // for each marker in the cluster group
+      clusterGroup.eachLayer(marker => {
+        // if the marker matches thw search
+        if (marker.options.title === query) {
+          // use marker cluster's zoom function and zoom to the marker
+          clusterGroup.zoomToShowLayer(marker, function() {
+            // open marker's popup to make it even more identifiable
+            marker.openPopup();
+          });
+        }
+      });
+    });
+    },
   // set searchbar size and max search results
   searchBarWidth: '200px',
   searchBarHeight: '30px',
   maxSearchResults: 10
 // add to the map
 }).addTo(map);
+
+const legend = L.control({position: "bottomleft"});
 
 // close then
 });
