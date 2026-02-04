@@ -20,7 +20,7 @@ const map = L.map('map', {
   // disable default zoom control so that we can change where it is
   zoomControl: false
 // set view and zoom to correct area so (most of) the points are in frame when the map loads
-}).setView([37, 28], 6);
+}).setView([37, 28], 5);
 
 // place zoom control in the bottom right corner of the screen
 var zoomcontrol = L.control.zoom({position: "bottomright"}).addTo(map);
