@@ -27,6 +27,21 @@ const map = L.map('map', {
 // place zoom control in the bottom right corner of the screen
 var zoomcontrol = L.control.zoom({position: "bottomright"}).addTo(map);
 
+//create key and place it in the bottom left corner of the screen
+var mapLegend = L.control({position: "bottomleft"});
+
+//customize Legend
+mapLegend.onAdd = function (map) {
+  //create html div
+  var div = L.DomUtil.create('div', 'legend');
+  //content
+  div.innerHTML += "<h2>Legend</h2><br>Bishops: <img src=\"locatedIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br>Rural Bishops (Chorepiscopi): <img src=\"ruralIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\">";
+  return div;
+};
+
+//add legend to map
+mapLegend.addTo(map);
+
 // create Open Street Map Layer from url
 const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   // proper attribution

@@ -23,13 +23,44 @@
       padding: 0;
     }
 
-    #map { height: 100vh; }
+    #map { 
+      position: fixed; 
+      bottom: 0;       
+      left: 0;   
+      width: 100%; 
+      height: 80vh;
+      font: "Times New Roman";
+    }
+
+    .legend {
+      padding: 6px 8px;
+      font: 14px/16px "Times New Roman";
+      background: white;
+      background: rgb(255,255,255);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+
+    h2 {
+      margin: 3px 0px;
+    }
+
+    #info {
+      padding: 6px 30px;
+      font: "Times New Roman";
+    }
   </style>
 
 </head>
 <body>
-  <div id="map">
-  </div>
+  <main>
+    <div id="info">
+      <h1>Nicaea Signatories</h1>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lobortis et mi a pulvinar. Vestibulum pellentesque nunc vitae lorem commodo, at interdum libero aliquet. Proin efficitur turpis id libero imperdiet commodo. Quisque vitae ornare magna. Nullam congue consectetur est, ac finibus enim. Vivamus quis lectus erat. Integer lacus felis, facilisis at tellus ut, blandit rutrum purus. Duis eget sem augue. Nam ullamcorper risus odio. Maecenas ornare hendrerit sem, nec convallis arcu mattis non. Sed eget mauris sed mauris semper volutpat. Vestibulum dapibus aliquam sem eget mattis.
+    </div>
+    <div id="map">
+    </div>
+  </main>
 </body>
 <script src="./script.js">
   
