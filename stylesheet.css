@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#map { 
+  position: fixed; 
+  bottom: 0;       
+  left: 0;   
+  width: 100%; 
+  height: 100%;
+  font: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.legend {
+  padding: 6px 8px;
+  font: 13px "Helvetica Neue", Arial, Helvetica, sans-serif;
+  background: white;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 12px;
+}
+
+h2 {
+  margin: 3px 0px;
+}
+
+#info {
+  padding: 6px 30px;
+  font: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.infoPopup .leaflet-popup-tip-container {
+  display: none;
+  font: 14px/16px;
+}
+

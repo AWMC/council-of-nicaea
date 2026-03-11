@@ -24,10 +24,24 @@ const map = L.map('map', {
 // set view and zoom to correct area so (most of) the points are in frame when the map loads
 }).setView([37, 28], 5);
 
+// splash page
+L.popup([37, 28],{
+  //text  
+  content: "<h2>Nicaea Signatories</h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lobortis et mi a pulvinar. Vestibulum pellentesque nunc vitae lorem commodo, at interdum libero aliquet. Proin efficitur turpis id libero imperdiet commodo. Quisque vitae ornare magna. Nullam congue consectetur est, ac finibus enim. Vivamus quis lectus erat. Integer lacus felis, facilisis at tellus ut, blandit rutrum purus. Duis eget sem augue. Nam ullamcorper risus odio. Maecenas ornare hendrerit sem, nec convallis arcu mattis non. Sed eget mauris sed mauris semper volutpat. Vestibulum dapibus aliquam sem eget mattis.",
+  //declare class for css
+  className: "infoPopup",
+  //keep in view and pan
+  keepInView: true,
+  autoPan: true,
+  // adjust width
+  maxWidth: 500
+//add to map
+}).openOn(map);
+
 // place zoom control in the bottom right corner of the screen
 var zoomcontrol = L.control.zoom({position: "bottomright"}).addTo(map);
 
-//create key and place it in the bottom left corner of the screen
+//create legend and place it in the bottom left corner of the screen
 var mapLegend = L.control({position: "bottomleft"});
 
 //customize Legend
@@ -35,7 +49,7 @@ mapLegend.onAdd = function (map) {
   //create html div
   var div = L.DomUtil.create('div', 'legend');
   //content
-  div.innerHTML += "<h2>Legend</h2><br>Bishops: <img src=\"locatedIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br>Rural Bishops (Chorepiscopi): <img src=\"ruralIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\">";
+  div.innerHTML += "<h2>Legend</h2><br>Nicaea: <img src=\"starIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>Bishops: <img src=\"locatedIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>Rural Bishops (Chorepiscopi): <img src=\"ruralIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\">";
   return div;
 };
 
@@ -113,7 +127,26 @@ for (let i = 0; i < eparchyList.length; i++) {
     // disable polygon
     showCoverageOnHover: false,
     // decrease cluster radius so more points show up on load
-    maxClusterRadius: 20
+    maxClusterRadius: 20,
+    // function for icons
+    iconCreateFunction: function(cluster) {
+      // find cluster num
+      var childCount = cluster.getChildCount();
+      // beginning of class string
+      var c = ' marker-cluster-';
+      // bound for small class
+      if (childCount < 5) {
+          c += 'small';
+      // ... for med class
+      } else if (childCount < 12) {
+          c += 'medium';
+      // ... for large class
+      } else {
+          c += 'large';
+      }
+      // return icon
+      return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
+    } 
   });
   // create layer object from geoJSON data
   var eparchyBishops = L.geoJSON(geojsonFeature, {
