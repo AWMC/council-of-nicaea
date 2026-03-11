@@ -34,7 +34,8 @@ L.popup([37, 28],{
   keepInView: true,
   autoPan: true,
   // adjust width
-  maxWidth: 500
+  maxWidth: 500,
+  autoPanPadding: [250, 250]
 //add to map
 }).openOn(map);
 
