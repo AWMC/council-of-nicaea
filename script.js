@@ -1,6 +1,14 @@
 //HTML for splash info & legend
-const infoHTML = "<h2>Nicaea Signatories</h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lobortis et mi a pulvinar. Vestibulum pellentesque nunc vitae lorem commodo, at interdum libero aliquet. Proin efficitur turpis id libero imperdiet commodo. Quisque vitae ornare magna. Nullam congue consectetur est, ac finibus enim. Vivamus quis lectus erat. Integer lacus felis, facilisis at tellus ut, blandit rutrum purus. Duis eget sem augue. Nam ullamcorper risus odio. Maecenas ornare hendrerit sem, nec convallis arcu mattis non. Sed eget mauris sed mauris semper volutpat. Vestibulum dapibus aliquam sem eget mattis.";
-const legendHTML = "<h2>Legend</h2><br>Nicaea: <img src=\"starIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>Bishops: <img src=\"locatedIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>Rural Bishops (Chorepiscopi): <img src=\"ruralIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\">";
+const infoHTML = `
+<h2>Nicaea Signatories</h2>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lobortis et mi a pulvinar. Vestibulum pellentesque nunc vitae lorem commodo, at interdum libero aliquet. Proin efficitur turpis id libero imperdiet commodo. Quisque vitae ornare magna. Nullam congue consectetur est, ac finibus enim. Vivamus quis lectus erat. Integer lacus felis, facilisis at tellus ut, blandit rutrum purus. Duis eget sem augue. Nam ullamcorper risus odio. Maecenas ornare hendrerit sem, nec convallis arcu mattis non. Sed eget mauris sed mauris semper volutpat. Vestibulum dapibus aliquam sem eget mattis.
+`;
+const legendHTML = `
+<h2>Legend</h2><br>
+Nicaea: <img src=\"starIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>
+Bishops: <img src=\"locatedIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>
+Rural Bishops (Chorepiscopi): <img src=\"ruralIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\">
+`;
 
 // get data from geoJSON file
 fetch('nicaean_bishops.geojson')

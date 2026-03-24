@@ -34,3 +34,16 @@ h2 {
   font: 14px/16px;
 }
 
+.leaflet-touch .leaflet-control-layers,
+.leaflet-control-layers {
+    border: 0px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 12px;
+}
+
+.leaflet-touch .leaflet-bar, 
+.leaflet-bar {
+    border: 0px solid #ff5733;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 12px;
+}
