@@ -1,8 +1,18 @@
 //HTML for splash info & legend
 const infoHTML = `
 <h2>Nicaea Signatories</h2>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lobortis et mi a pulvinar. Vestibulum pellentesque nunc vitae lorem commodo, at interdum libero aliquet. Proin efficitur turpis id libero imperdiet commodo. Quisque vitae ornare magna. Nullam congue consectetur est, ac finibus enim. Vivamus quis lectus erat. Integer lacus felis, facilisis at tellus ut, blandit rutrum purus. Duis eget sem augue. Nam ullamcorper risus odio. Maecenas ornare hendrerit sem, nec convallis arcu mattis non. Sed eget mauris sed mauris semper volutpat. Vestibulum dapibus aliquam sem eget mattis.
-`;
+<p>This interactive map depicts the attendees at the First Council of Nicaea, summoned by the Emperor Constantine in 325 CE and generally considered to be one of the most important events in the history of the early Church.</p>
+<p><strong>User Guide</strong></p>
+<ul>
+<li>Attendees are shown individually; where they cluster, a numbered circle indicates the count.</li>
+<li>Hollow circles represent “rural bishops” (chorepiscopi) who did not have an urban see.</li>
+<li>Click on any episcopal see to learn the name of the bishop or other member of the clergy who attended, and to link to the Pleiades page for their see.</li>
+<li>Use the layers button in the upper-right corner to filter bishops by eparchy. Click “bishops by eparchy” to uncheck all layers, then choose the eparchies you wish to view.</li>
+<li>Use the search bar in the upper-left corner to search by bishop name or see.</li>
+</ul>
+<p>&copy; Ancient World Mapping Center 2026<br>
+<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.en">CC-BY-NC 4.0</a><br>
+<a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL-3.0</a></p>`;
 const legendHTML = `
 <h2>Legend</h2><br>
 Nicaea: <img src=\"starIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>
@@ -124,44 +134,50 @@ let eparchyList = [];
 // create iterator to run through each bishop in the jeoGSON feature from the QGIS data
 for (let i = 0; i < geojsonFeature.features.length; i++) {
   // grab the eparchy from the ith bishop in the data
-  let current_eparchy = geojsonFeature.features[i].properties.eparchy;
+  let currentEparchy = geojsonFeature.features[i].properties.eparchy;
   // if that eparchy is not in the array for the names of eparchies,
-  if (!eparchyList.includes(current_eparchy)) {
+  if (!eparchyList.includes(currentEparchy)) {
     // add it to the array
-    eparchyList.push(current_eparchy);
+    eparchyList.push(currentEparchy);
   }
 };
+
+// sort eparchies alphabetically
+eparchyList.sort();
+
+const masterCluster = L.markerClusterGroup({
+  // disable polygon
+  showCoverageOnHover: false,
+  // decrease cluster radius so more points show up on load
+  maxClusterRadius: 20,
+  // function for icons
+  iconCreateFunction: function(cluster) {
+    // find cluster num
+    var childCount = cluster.getChildCount();
+    // beginning of class string
+    var c = ' marker-cluster-';
+    // bound for small class
+    if (childCount < 5) {
+        c += 'small';
+    // ... for med class
+    } else if (childCount < 12) {
+        c += 'medium';
+    // ... for large class
+    } else {
+        c += 'large';
+    }
+    // return icon
+    return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
+  } 
+}).addTo(map);
 
 // create empty array for layer objects that will eventually hold all datapoints within one eparchy
 let eparchyLayers = [];
 // create an iterator to run through each eparchy in the list of eparchy names
 for (let i = 0; i < eparchyList.length; i++) {
+  const currentEparchy = eparchyList[i];
   // create cluster group from markercluster plugin to help deal with collision detection
-  const eparchyCluster = L.markerClusterGroup({
-    // disable polygon
-    showCoverageOnHover: false,
-    // decrease cluster radius so more points show up on load
-    maxClusterRadius: 20,
-    // function for icons
-    iconCreateFunction: function(cluster) {
-      // find cluster num
-      var childCount = cluster.getChildCount();
-      // beginning of class string
-      var c = ' marker-cluster-';
-      // bound for small class
-      if (childCount < 5) {
-          c += 'small';
-      // ... for med class
-      } else if (childCount < 12) {
-          c += 'medium';
-      // ... for large class
-      } else {
-          c += 'large';
-      }
-      // return icon
-      return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
-    } 
-  });
+  const eparchySubgroup = L.featureGroup.subGroup(masterCluster);
   // create layer object from geoJSON data
   var eparchyBishops = L.geoJSON(geojsonFeature, {
     // filter data using a function
@@ -171,7 +187,7 @@ for (let i = 0; i < eparchyList.length; i++) {
       /*  make the functionreturn t/f depending on if the bishop's eparchy matches the ith eparchy. 
           this makes it so only bishops in the ith eparchy are included in the layer being created
       */  
-      return (feature.properties.eparchy === eparchyList[i]);  
+      return (feature.properties.eparchy === currentEparchy);  
     },
     /*  pointToLayer determines how points in a geoJSON feature show up on the map. 
         it wants a function that returns a marker object
@@ -224,28 +240,19 @@ for (let i = 0; i < eparchyList.length; i++) {
       // apply popup to marker
       layer.bindPopup(popupText);
     }});
+    eparchyBishops.addTo(eparchySubgroup);
     //add the layer to clustering layer
-    eparchyCluster.addLayer(eparchyBishops);
+    eparchySubgroup.addLayer(eparchyBishops);
+
+    eparchySubgroup.addTo(map);
     // format layer into object for compatability with tree plugin
     let treeLayer = {
-      label: eparchyList[i],
-      layer: eparchyCluster
+      label: currentEparchy,
+      layer: eparchySubgroup
     }
-    // add cluster layer to map
-    map.addLayer(eparchyCluster);
     // add object to layers array
     eparchyLayers.push(treeLayer);
 }
-
-/* removed because of personal preference; no reason to ever disable layers
-let baseTree = {
-  label: "Base Layers",
-  children: [
-    {label: "OpenStreetMap", layer: osm},
-    {label: "Ancient World", layer: overlay}
-  ]
-};
-*/
 
 // create overlays object
 let overlaysTree = [
@@ -286,28 +293,26 @@ var searchBar = L.control.pinSearch({
     }
     // go through each cluster group
     eparchyLayers.forEach(obj => {
-      const clusterGroup = obj.layer;      
-      // for each marker in the cluster group
-      clusterGroup.eachLayer(marker => {
-        // if the marker matches thw search
-        if (marker.options.title === query) {
-          // use marker cluster's zoom function and zoom to the marker
-          clusterGroup.zoomToShowLayer(marker, function() {
-            // open marker's popup to make it even more identifiable
-            marker.openPopup();
-          });
-        }
-      });
+      const subGroup = obj.layer;
+      if (map.hasLayer(subGroup)) {
+        subGroup.eachLayer(geoJsonLayer => {
+          geoJsonLayer.eachLayer( marker =>{
+            if (marker.options.title === query) {
+              masterCluster.zoomToShowLayer(marker, function() {
+                marker.openPopup();
+              });
+            }
+          }); 
+        });
+      }
     });
-    },
+  },
   // set searchbar size and max search results
   searchBarWidth: '200px',
   searchBarHeight: '30px',
   maxSearchResults: 10
 // add to the map
 }).addTo(map);
-
-const legend = L.control({position: "bottomleft"});
 
 // close then
 });
