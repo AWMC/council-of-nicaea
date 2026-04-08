@@ -83,14 +83,14 @@ mapLegend.addTo(map);
 // create Open Street Map Layer from url
 const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   // proper attribution
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
 // add OSM layer to the map layer
 }).addTo(map);
 
 // create Consortium of Ancient World Mappers layer (better for a map of the ancient world)
 const overlay = L.tileLayer('https://cawm.lib.uiowa.edu/tiles/{z}/{x}/{y}.png', {
   // proper attribution
-  attribution: '&copy; <a href="https://cawm.lib.uiowa.edu/index.html">Consortium of Ancient World Mappers</a>'
+  attribution: '&copy; <a href="https://cawm.lib.uiowa.edu/index.html" target="_blank">Consortium of Ancient World Mappers</a>'
 // add CAWM layer to the map layer (after adding OSM layer so CAWM is on top)
 }).addTo(map);
 
@@ -127,7 +127,7 @@ const nicaea = L.marker([40.428361244824998, 29.716146510449995], {
   // give title for compatibility with search bar
   title: "Theognis of Nicaea"
 // give the point a popup and add it to the map
-}).bindPopup(`Theognis of <a href="https://pleiades.stoa.org/places/511268Nicaea" target="_blank">Nicaea</a><br/>Eparchy of Bithynia`).addTo(map);
+}).bindPopup(`Theognis of <a href="https://pleiades.stoa.org/places/511268" target="_blank">Nicaea</a><br/>Eparchy of Bithynia`).addTo(map);
 
 // create empty array for names of eparchies to be placed in 
 let eparchyList = [];
