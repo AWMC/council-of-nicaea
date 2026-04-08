@@ -222,28 +222,35 @@ for (let i = 0; i < eparchyList.length; i++) {
             BISHOP
             Eparchy of EPARCHY
         */
-        popupText = layer.feature.properties.name+"<br />Eparchy of "+layer.feature.properties.eparchy;
+        popupText = `${layer.feature.properties.name}<br/>Eparchy of ${layer.feature.properties.eparchy}`;
       // if the bishop is not in an eparchy
       } else if (layer.feature.properties.eparchy === "None") {
         /* make the text in the popup include the bishop name and city: 
             BISHOP of CITY
         */
-        popupText = layer.feature.properties.name+" of "+layer.feature.properties.city;
+        popupText = `${layer.feature.properties.name} of ${layer.feature.properties.city}`;
       // otherwise (if the bishop is not rural and is in an eparchy)
-      } else {
+      } else if (layer.feature.properties.pleiades === null) {
         /* make the text in the popup include the bishop name, city, and eparchy: 
             BISHOP of CITY
             Eparchy of EPARCHY
         */  
-        popupText = layer.feature.properties.name+" of "+layer.feature.properties.city+"<br />Eparchy of "+layer.feature.properties.eparchy;
+        popupText = `${layer.feature.properties.name} of ${layer.feature.properties.city}<br />Eparchy of ${layer.feature.properties.eparchy}`;
+      } else {
+        /* make the text in the popup include the bishop name, city, and eparchy: 
+            BISHOP of CITY
+            Eparchy of EPARCHY
+           also a hyperlink in the city portion
+        */  
+        popupText = `${layer.feature.properties.name} of <a href=${layer.feature.properties.pleiades} target="_blank">${layer.feature.properties.city}</a><br />Eparchy of ${layer.feature.properties.eparchy}`;
       }
       // apply popup to marker
       layer.bindPopup(popupText);
     }});
+    // add bishops to subgroup
     eparchyBishops.addTo(eparchySubgroup);
-    //add the layer to clustering layer
+    // add the layer to clustering layer and the map
     eparchySubgroup.addLayer(eparchyBishops);
-
     eparchySubgroup.addTo(map);
     // format layer into object for compatability with tree plugin
     let treeLayer = {
