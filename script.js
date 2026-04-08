@@ -11,8 +11,8 @@ const infoHTML = `
 <li>Use the search bar in the upper-left corner to search by bishop name or see.</li>
 </ul>
 <p>&copy; Ancient World Mapping Center 2026<br>
-<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.en">CC-BY-NC 4.0</a><br>
-<a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL-3.0</a></p>`;
+<a href="https://creativecommons.org/licenses/by-nc/4.0/deed.en" target="_blank">CC-BY-NC 4.0</a><br>
+<a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GPL-3.0</a></p>`;
 const legendHTML = `
 <h2>Legend</h2><br>
 Nicaea: <img src=\"starIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>
