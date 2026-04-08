@@ -127,7 +127,7 @@ const nicaea = L.marker([40.428361244824998, 29.716146510449995], {
   // give title for compatibility with search bar
   title: "Theognis of Nicaea"
 // give the point a popup and add it to the map
-}).bindPopup("Theognis of Nicaea<br />Eparchy of Bithynia").addTo(map);
+}).bindPopup(`Theognis of <a href="https://pleiades.stoa.org/places/511268Nicaea" target="_blank">Nicaea</a><br/>Eparchy of Bithynia`).addTo(map);
 
 // create empty array for names of eparchies to be placed in 
 let eparchyList = [];
@@ -235,7 +235,7 @@ for (let i = 0; i < eparchyList.length; i++) {
             BISHOP of CITY
             Eparchy of EPARCHY
         */  
-        popupText = `${layer.feature.properties.name} of ${layer.feature.properties.city}<br />Eparchy of ${layer.feature.properties.eparchy}`;
+        popupText = `${layer.feature.properties.name} of ${layer.feature.properties.city}<br/>Eparchy of ${layer.feature.properties.eparchy}`;
       } else {
         /* make the text in the popup include the bishop name, city, and eparchy: 
             BISHOP of CITY
