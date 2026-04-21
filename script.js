@@ -15,9 +15,9 @@ const infoHTML = `
 <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GPL-3.0</a></p>`;
 const legendHTML = `
 <h2>Legend</h2><br>
-Nicaea: <img src=\"starIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>
-Bishops: <img src=\"locatedIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>
-Rural Bishops (Chorepiscopi): <img src=\"ruralIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\">
+Nicaea: <img src=\"./Icons/starIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>
+Bishops: <img src=\"./Icons/locatedIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\"><br><br>
+Rural Bishops (Chorepiscopi): <img src=\"./Icons/ruralIcon.png\" style=\"vertical-align: middle; width: auto; height: auto;\">
 `;
 
 // get data from geoJSON file
@@ -80,13 +80,6 @@ mapLegend.onAdd = function (map) {
 //add legend to map
 mapLegend.addTo(map);
 
-// create Open Street Map Layer from url
-const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  // proper attribution
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
-// add OSM layer to the map layer
-}).addTo(map);
-
 // create Consortium of Ancient World Mappers layer (better for a map of the ancient world)
 const overlay = L.tileLayer('https://cawm.lib.uiowa.edu/tiles/{z}/{x}/{y}.png', {
   // proper attribution
@@ -97,7 +90,7 @@ const overlay = L.tileLayer('https://cawm.lib.uiowa.edu/tiles/{z}/{x}/{y}.png', 
 // create icon for bishops that have a location (non-rural)
 const locatedIcon = L.icon({
   // pull icon source  
-  iconUrl: 'locatedIcon.png',
+  iconUrl: './Icons/locatedIcon.png',
   // make symbol centered
   iconAnchor: [9,9]
 });
@@ -105,7 +98,7 @@ const locatedIcon = L.icon({
 // create icon for rural bishops
 const ruralIcon = L.icon({
   // pull icon source
-  iconUrl: 'ruralIcon.png',
+  iconUrl: './Icons/ruralIcon.png',
   // make symbol centered
   iconAnchor: [9,9]
 });
@@ -113,7 +106,7 @@ const ruralIcon = L.icon({
 // create icon for Nicaea
 const starIcon = L.icon({
   // pull icon source
-  iconUrl: 'starIcon.png',
+  iconUrl: './Icons/starIcon.png',
   // make symbol centered
   iconAnchor: [12, 11.5]
 })
