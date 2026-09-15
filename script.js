@@ -58,7 +58,8 @@ L.popup([37, 28],{
   // adjust width
   maxWidth: 500,
   //padding for when brought back into frame
-  autoPanPadding: [250, 250]
+  autoPanPadding: [50, 50],
+  offset: [0, 210]
 //add to map
 }).openOn(map);
 
